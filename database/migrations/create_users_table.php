@@ -23,16 +23,6 @@ return new class extends Migration {
 
             // Clé étrangère vers tb_villes
             $table->foreign('ville_id')->references('ville_id')->on('tb_villes')->onDelete('cascade');
-
-            // Contraintes CHECK pour le format
-            $table->check("username REGEXP '^[A-Za-z0-9._]+$'");
-            $table->check("nom REGEXP '^[A-Za-z]+$'");
-            $table->check("prenom REGEXP '^[A-Za-z]+$'");
-            $table->check("email IS NULL OR email REGEXP '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'");
-            $table->check("num_tel IS NULL OR num_tel REGEXP '^\\+?[0-9]{7,15}$'");
-
-            // Au moins un des deux: email ou num_tel
-            $table->check("(email IS NOT NULL OR num_tel IS NOT NULL)");
         });
     }
 

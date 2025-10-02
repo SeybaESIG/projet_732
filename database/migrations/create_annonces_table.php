@@ -16,10 +16,6 @@ return new class extends Migration {
             $table->enum('statut', ['active', 'vendue']);
             $table->string('titre')->nullable();
 
-            // Contraintes CHECK
-            $table->check("prix >= 0");
-            $table->check("titre IS NULL OR titre REGEXP '^[A-Za-z0-9]+$'");
-
             // Clé étrangère
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
