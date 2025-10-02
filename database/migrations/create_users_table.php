@@ -12,12 +12,17 @@ return new class extends Migration {
             $table->string('username', 30)->unique();
             $table->string('nom', 50);
             $table->string('prenom', 50);
+            $table->string('adresse');
+            $table->unsignedBigInteger('ville_id');
+
             $table->string('email')->unique()->nullable();
             $table->string('num_tel', 20)->unique()->nullable();
             $table->string('mot_de_passe');
             $table->dateTime('date_inscription');
-            $table->string('adresse');
             $table->timestamps();
+
+            // Clé étrangère vers tb_villes
+            $table->foreign('ville_id')->references('ville_id')->on('tb_villes')->onDelete('cascade');
 
             // Contraintes CHECK pour le format
             $table->check("username REGEXP '^[A-Za-z0-9._]+$'");
@@ -33,6 +38,6 @@ return new class extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('tb_users');
     }
 };

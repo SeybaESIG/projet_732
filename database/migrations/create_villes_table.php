@@ -9,17 +9,18 @@ return new class extends Migration {
     {
         Schema::create('tb_villes', function (Blueprint $table) {
             $table->bigIncrements('ville_id');
-            $table->foreignId('pays_id')->constrained('pays')->onDelete('cascade');
+            $table->unsignedBigInteger('pays_id');
             $table->string('name');
             $table->string('code_postal')->unique();
             $table->timestamps();
 
+            $table->foreign('pays_id')->references('pays_id')->on('tb_pays')->onDelete('cascade');
             $table->unique(['pays_id', 'name', 'code_postal']);
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('villes');
+        Schema::dropIfExists('tb_villes');
     }
 };
