@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->string('titre')->nullable();
 
             // Clé étrangère
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('users_id')->on('tb_users')->onDelete('cascade');
         });
     }
 

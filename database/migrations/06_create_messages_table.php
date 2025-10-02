@@ -15,8 +15,8 @@ return new class extends Migration {
             $table->dateTime('date_envoi');
 
             $table->foreign('annonce_id')->references('annonce_id')->on('tb_annonces')->onDelete('cascade');
-            $table->foreign('expediteur_id')->references('user_id')->on('users')->onDelete('cascade');
-            $table->foreign('receveur_id')->references('user_id')->on('users')->onDelete('cascade');
+            $table->foreign('expediteur_id')->references('users_id')->on('tb_users')->onDelete('cascade');
+            $table->foreign('receveur_id')->references('users_id')->on('tb_users')->onDelete('cascade');
         });
     }
 

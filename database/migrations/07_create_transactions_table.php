@@ -16,8 +16,8 @@ return new class extends Migration {
             $table->dateTime('date_transaction');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('annonce_id')->references('id')->on('tb_annonces');
+            $table->foreign('user_id')->references('users_id')->on('tb_users');
+            $table->foreign('annonce_id')->references('annonce_id')->on('tb_annonces');
         });
     }
 

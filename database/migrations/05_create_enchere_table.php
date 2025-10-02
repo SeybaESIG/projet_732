@@ -15,8 +15,8 @@ return new class extends Migration {
             $table->dateTime('date_proposition');
             $table->timestamps();
 
-            $table->foreign('annonce_id')->references('id')->on('tb_annonces');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('annonce_id')->references('annonce_id')->on('tb_annonces')->onDelete('cascade');
+            $table->foreign('user_id')->references('users_id')->on('tb_users')->onDelete('cascade');
         });
     }
 
