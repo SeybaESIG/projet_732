@@ -1,3 +1,4 @@
+/*
 <?php
 
 use Illuminate\Support\Facades\Route;
@@ -12,3 +13,5 @@ Route::apiResource('pays', PaysController::class);
 Route::apiResource('villes', VilleController::class);
 Route::apiResource('annonces', AnnonceController::class);
 Route::apiResource('encheres', EnchereController::class);
+
+*/
