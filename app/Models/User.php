@@ -2,47 +2,68 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+    protected $table = 'tb_users';
+
     /**
-     * The attributes that are mass assignable.
+     * Attributs mass assignable.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'username',
+        'nom',
+        'prenom',
         'email',
-        'password',
+        'tel',
+        'adresse',
+        'id_ville',
+        'dateInscription',
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * Attributs cachés pour la sérialisation.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $hidden = [
-        'password',
         'remember_token',
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * Casts d'attributs.
      *
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
+    protected $casts = [
+        'dateInscription' => 'datetime',
+    ];
+
+    /**
+     * Remplir automatiquement dateInscription à la création.
+     */
+    protected static function booted(): void
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        static::creating(function (self $user) {
+            if (empty($user->dateInscription)) {
+                $user->dateInscription = now();
+            }
+        });
+    }
+
+    /**
+     * Relation vers la ville (clé étrangère id_ville).
+     */
+    public function ville(): BelongsTo
+    {
+        return $this->belongsTo(Ville::class, 'id_ville');
     }
 }
