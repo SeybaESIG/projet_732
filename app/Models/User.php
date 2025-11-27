@@ -2,47 +2,109 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+    protected $table = 'tb_users';
+    protected $primaryKey = 'users_id';
+    protected $keyType = 'int';
+
     /**
-     * The attributes that are mass assignable.
+     * Attributs mass-assignable.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'username',
+        'nom',
+        'prenom',
         'email',
-        'password',
+        'num_tel',
+        'adresse',
+        'ville_id',
+        'mot_de_passe',
+        'date_inscription',
+        'google_id',
+        'google_avatar_url',
+        'google_access_token',
+        'google_refresh_token',
+        'google_token_expires_at',
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * Attributs cachés lors de la sérialisation.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'mot_de_passe',
+        'google_access_token',
+        'google_refresh_token',
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * Casts automatiques.
      *
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
+    protected $casts = [
+        'date_inscription' => 'datetime',
+        'google_token_expires_at' => 'datetime',
+        'google_access_token' => 'encrypted',
+        'google_refresh_token' => 'encrypted',
+    ];
+
+    /**
+     * Remplir automatiquement date_inscription à la création.
+     */
+    protected static function booted(): void
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        static::creating(function (self $user) {
+            if (empty($user->date_inscription)) {
+                $user->date_inscription = now();
+            }
+        });
+    }
+
+    /**
+     * Champ mot_de_passe hashé automatiquement.
+     */
+    protected function motDePasse(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => filled($value) ? Hash::make($value) : null,
+        );
+    }
+
+    /**
+     * Spécifie à Laravel où trouver le mot de passe pour l'auth.
+     */
+    public function getAuthPassword(): ?string
+    {
+        return $this->mot_de_passe;
+    }
+
+    /**
+     * Relation avec la ville.
+     */
+    public function ville(): BelongsTo
+    {
+        return $this->belongsTo(Ville::class, 'ville_id');
+    }
+
+    /**
+     * Désactive le remember token (non utilisé avec l'OAuth Google).
+     */
+    public function getRememberTokenName(): ?string
+    {
+        return null;
     }
 }

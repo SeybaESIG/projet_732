@@ -1,0 +1,28 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    public function up(): void
+    {
+        Schema::create('tb_annonces', function (Blueprint $table) {
+            $table->bigIncrements('annonce_id');
+            $table->unsignedBigInteger('user_id');
+            $table->string('description', 500);
+            $table->decimal('prix', 10, 2)->unsigned();
+            $table->dateTime('date_publication');
+            $table->enum('statut', ['active', 'vendue']);
+            $table->string('titre')->nullable();
+
+            // Clé étrangère
+            $table->foreign('user_id')->references('users_id')->on('tb_users')->onDelete('cascade');
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('tb_annonces');
+    }
+};
